@@ -25,7 +25,7 @@ class Journal
   def find_entry()
     @journal.each do |entry|
       if (journal.entry_title == title) && (journal.entry_content == content)
-        puts ""
+        puts "put something here"
       end
     end
   end

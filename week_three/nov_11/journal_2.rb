@@ -14,7 +14,7 @@ class Journal
     @journal = journal
   end
 
-  def add_entry(entry)
+  def add_entry(page_title, content)
     @journal << journal
   end
 

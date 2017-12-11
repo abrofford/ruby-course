@@ -1,104 +1,247 @@
 class Card
-  attr_accessor :face_value, :suit
+  attr_accessor :value, :suit
 
-  def initialize(face_value, suit)
-    @face_value = face_value
+  def initialize(value, suit)
+    @value = value
     @suit = suit
-  end
-
-  def self.print
-    print Card
   end
 end
 
 class Hand
-  attr_accessor :card_1, :card_2, :card_3, :card_4, :card_5
+  attr_accessor :cards
 
-  def initialize(card_1, card_2, card_3, card_4, card_5)
-    @card_1 = card_1
-    @card_2 = card_2
-    @card_3 = card_3
-    @card_4 = card_4
-    @card_5 = card_5
-    @hand = [@card_1, @card_2, @card_3, @card_4, @card_5]
+  def initialize(cards)
+    @cards = cards
   end
 end
 
 class HandRanker
 
-  def initialize
-    plays = {}
+  def initialize(play)
+    @play = play
+    @rank = []
   end
 
-  def straight_flush
-
+  def best_hand_picker
+    @play.each_with_index do |hand, index|
+      if straight_flush(hand)
+        @rank << {index: index, ranking: 9}
+      elsif four_of_a_kind(hand)
+        @rank << {index: index, ranking: 8}
+      # elsif full_house(hand)
+      #   @rank << {index: index, ranking: 7}
+      elsif flush(hand)
+        @rank << {index: index, ranking: 6}
+      elsif straight(hand)
+        @rank << {index: index, ranking: 5}
+      elsif three_of_a_kind(hand)
+        @rank << {index: index, ranking: 4}
+      elsif two_pair(hand)
+        @rank << {index: index, ranking: 3}
+      elsif one_pair(hand)
+        @rank << {index: index, ranking: 2}
+      else high_card(hand)
+        @rank << {index: index, ranking: 1}
+      end
+      p @rank
+    end
+     p @rank.max_by{|k| k[:ranking] }
   end
 
-  def four_of_a_kind
-  end
+  private
 
-  def full_house
-  end
+    def straight_flush(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        if (suits.all? {|x| x == suits[0]}) && (values.sort.each_cons(2).all? {|x,y| y == x + 1})
+          true
+        else
+          false
+        end
+    end
 
-  def flush
-  end
+    def four_of_a_kind(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        result = values.find_all{ |e| values.count(e) == 4}
+          if result.length == 4
+            true
+          else
+            false
+          end
+    end
 
-  def straight
-  end
-
-  def three_of_a_kind
-  end
-
-  def two_pair
-  end
-
-  def one_pair
-  end
-
-  def high_card
-  end
-
-  def ranking
-
-    #rank = 0
-    #@hand.split.each do |card|
-    #   card.split.collect.each do |x|
-    #     case hands
-    #     when @suit == *5 then flushrank += 5
+    # def full_house(hand)
+    #     suits = []
+    #     values = []
+    #     hand.cards.each do |card|
+    #       suits << card.suit
+    #       values << card.value
     #     end
-    #end
-  end
+    #       result = values.find_all{ |e| values.count(e) == 3} && result = values.find_all{|e| values.count(e) == 2}
+    #         if (result.length == 3) && (result.length == 2)
+    #           true
+    #         else
+    #           false
+    #         end
+    # end
+
+    def flush(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        if suits.all? {|x| x == suits[0]}
+          true
+        else
+          false
+        end
+      end
+
+    def straight(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+    end
+      if values.sort.each_cons(2).all? {|x,y| y == x + 1}
+        true
+      else
+        false
+      end
+    end
+
+    def three_of_a_kind(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        result = values.find_all{ |e| values.count(e) == 3}
+          if result.length == 3
+            true
+          else
+            false
+          end
+    end
+
+    def two_pair(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        count = 0
+        values = values.group_by{|number| number}
+        values.values.map do |value|
+          if value.size == 2
+            count += 1
+          end
+        end
+          if count == 2
+            true
+          else
+            false
+          end
+    end
+
+    def one_pair(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        result = values.find_all{ |e| values.count(e) == 2}
+          if result.length == 2
+            true
+          else
+            false
+          end
+    end
+
+    def high_card(hand)
+      suits = []
+      values = []
+      hand.cards.each do |card|
+        suits << card.suit
+        values << card.value
+      end
+        if values.max
+          true
+        else
+          false
+        end
+    end
 end
 
-puts "Enter first card face_value: "
-repsonse = gets.chomp
-puts "Enter first card suit: "
-response = gets.chomp
-user_card_1 = Card.new(face_value, suit)
+first_set_of_cards = []
+second_set_of_cards = []
+third_set_of_cards = []
+fourth_set_of_cards = []
+fifth_set_of_cards = []
+hands = []
 
-puts "Enter second card face_value: "
-repsonse = gets.chomp
-puts "Enter second card suit: "
-response = gets.chomp
-user_card_2 = Card.new(face_value, suit)
+5.times do
+  puts "Please enter card number: "
+  card_value = gets.chomp.to_i
+  puts "Please enter card type: "
+  card_suit = gets.chomp
+  first_set_of_cards << Card.new(card_value, card_suit)
+end
 
-puts "Enter third card face_value: "
-repsonse = gets.chomp
-puts "Enter third card suit: "
-response = gets.chomp
-user_card_3 = Card.new(face_value, suit)
+5.times do
+  puts "Please enter card number: "
+  card_value = gets.chomp.to_i
+  puts "Please enter card type: "
+  card_suit = gets.chomp
+  second_set_of_cards << Card.new(card_value, card_suit)
+end
 
-puts "Enter fourth card face_value: "
-repsonse = gets.chomp
-puts "Enter fourth card suit: "
-response = gets.chomp
-user_card_4 = Card.new(face_value, suit)
+5.times do
+  puts "Please enter card number: "
+  card_value = gets.chomp.to_i
+  puts "Please enter card type: "
+  card_suit = gets.chomp
+  third_set_of_cards << Card.new(card_value, card_suit)
+end
 
-puts "Enter fifth card face_value: "
-repsonse = gets.chomp
-puts "Enter fifth card suit: "
-response = gets.chomp
-user_card_5 = Card.new(face_value, suit)
+5.times do
+  puts "Please enter card number: "
+  card_value = gets.chomp.to_i
+  puts "Please enter card type: "
+  card_suit = gets.chomp
+  fourth_set_of_cards << Card.new(card_value, card_suit)
+end
 
-user_card = []
-user_card << Hand.new(user_card_1, user_card_2, user_card_3, user_card_4, user_card_5)
+5.times do
+  puts "Please enter card number: "
+  card_value = gets.chomp.to_i
+  puts "Please enter card type: "
+  card_suit = gets.chomp
+  fifth_set_of_cards << Card.new(card_value, card_suit)
+end
+
+first_hand = Hand.new(first_set_of_cards)
+second_hand = Hand.new(second_set_of_cards)
+third_hand = Hand.new(third_set_of_cards)
+fourth_hand = Hand.new(fourth_set_of_cards)
+fifth_hand = Hand.new(fifth_set_of_cards)
+hands = [first_hand, second_hand, third_hand, fourth_hand, fifth_hand]
+
+hand_ranker = HandRanker.new(hands)
+
+hand_ranker.best_hand_picker

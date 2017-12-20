@@ -1,0 +1,37 @@
+<%= form_with(model: renter, local: true) do |form| %>
+  <% if renter.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(renter.errors.count, "error") %> prohibited this renter from being saved:</h2>
+
+      <ul>
+      <% renter.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address, id: :renter_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, id: :renter_title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :agency_name %>
+    <%= form.text_field :agency_name, id: :renter_agency_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :price %>
+    <%= form.number_field :price, id: :renter_price %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

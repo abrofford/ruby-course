@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @renter.address %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @renter.title %>
+</p>
+
+<p>
+  <strong>Agency name:</strong>
+  <%= @renter.agency_name %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @renter.price %>
+</p>
+
+<hr />
+
+<% @renter.comments.each do |comment| %>
+  <p><%= comment.title %></p>
+  <p><%= comment.body %></p>
+  <hr />
+<% end %>
+
+<%= form_for @new_comment, url: comments_path(@new_comment) do |f| %>
+  <%= f.text_field :title %>
+  <%= f.text_field :body %>
+  <%= f.hidden_field :renter_id, value: @renter.id %>
+  <%= f.submit %>
+<% end %>
+
+<%= link_to 'Edit', edit_renter_path(@renter) %> |
+<%= link_to 'Back', renters_path %>

@@ -1,0 +1,12 @@
+<p>
+  <strong>Restaurant:</strong>
+  <%= @restaurant.restaurant %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @restaurant.comment %>
+</p>
+
+<%= link_to 'Edit', edit_restaurant_path(@restaurant) %>
+<%= link_to 'Back', restaurants_path %>
